@@ -4,33 +4,46 @@ using UnityEngine;
 
 public class LandscapeController : MonoBehaviour {
 
+	public static LandscapeController Instance { get; protected set;}
+
 	public Sprite dirtSprite;
 	public Sprite rockySprite;
 
-	Landscape land;
+	public Landscape Landscape { get; protected set; }
 
 	// Use this for initialization
 	void Start () {
+		if (Instance != null) {
+			Debug.LogError ("There should never be 2 LandscapeControllers.");
+		}
+		Instance = this;
+
 		//Create a landscape and randomize types
-		land = new Landscape ();
-		land.RandomizeTiles ();
+		Landscape = new Landscape ();
+		Landscape.RandomizeTiles ();
 
 		//Create GameObject for each tile, to show visually
-		for (int x = 0; x < land.Width; x++) {
-			for (int y = 0; y < land.Height; y++) {
-				Tile tile_data = land.GetTileAt (x, y);
+		for (int x = 0; x < Landscape.Width; x++) {
+			for (int y = 0; y < Landscape.Height; y++) {
+				Tile tile_data = Landscape.GetTileAt (x, y);
 
 				GameObject tile_go = new GameObject ();
 				tile_go.name = "Tile_" + x + "_" + y;
 				tile_go.transform.position = new Vector3 (tile_data.X, tile_data.Y, 0);
+				tile_go.transform.SetParent (this.transform, true);
 
 				SpriteRenderer tile_sr = tile_go.AddComponent<SpriteRenderer> ();
+
 				if (tile_data.Type == Tile.TileType.Dirt) {
 					tile_sr.sprite = dirtSprite;
 				}
 				if (tile_data.Type == Tile.TileType.Rocky) {
 					tile_sr.sprite = rockySprite;
 				}
+
+				tile_data.RegisterTileTypeChangedCallback ((tile) => {
+					OnTileTypeChanged (tile, tile_go);
+				});
 			}
 		}
 
@@ -48,7 +61,7 @@ public class LandscapeController : MonoBehaviour {
 		} else if (tile_data.Type == Tile.TileType.Dirt) {
 			tile_go.GetComponent<SpriteRenderer> ().sprite = dirtSprite;
 		} else {
-			Debug.LogError ("OnTileTypeChanged - Inrecognized tile type");
+			Debug.LogError ("OnTileTypeChanged - Unrecognized tile type.");
 		}
 	}
 }
