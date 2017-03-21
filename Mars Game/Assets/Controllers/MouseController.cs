@@ -5,10 +5,10 @@ using UnityEngine;
 public class MouseController : MonoBehaviour {
 
 	public GameObject cursorHover;
-	public float MIN_X, MAX_X, MIN_Y, MAX_Y, MIN_Z, MAX_Z;
+	public float MIN_X, MAX_X, MIN_Y, MAX_Y;
 
-	private float speed = 4.0f;
-	private float zoomSpeed = 2.0f;
+	private float cameraPanSpeed = 4.0f;
+	private float cameraZoomSpeed = 2.0f;
 
 	Vector3 lastFramePosition;
 	Vector3 dragStartPosition;
@@ -72,7 +72,7 @@ public class MouseController : MonoBehaviour {
 		// 0 - leftMB, 1 - rightMB, 2 - middleMB
 		if (Input.GetMouseButton(2)) {
 			Vector3 difference = lastFramePosition - currentFramePosition;
-			transform.Translate (difference);
+			Camera.main.transform.Translate (difference);
 		}
 
 		lastFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
@@ -80,27 +80,35 @@ public class MouseController : MonoBehaviour {
 
 		//Take keyboard inputs and move camera accordingly
 		if (Input.GetKey (KeyCode.W)) {
-			transform.position += Vector3.up * speed * Time.deltaTime;
+			Camera.main.transform.position += Vector3.up * cameraPanSpeed * Time.deltaTime;
 		}
 		if (Input.GetKey (KeyCode.A)) {
-			transform.position += Vector3.left * speed * Time.deltaTime;
+			Camera.main.transform.position += Vector3.left * cameraPanSpeed * Time.deltaTime;
 		}
 		if (Input.GetKey (KeyCode.S)) {
-			transform.position += Vector3.down * speed * Time.deltaTime;
+			Camera.main.transform.position += Vector3.down * cameraPanSpeed * Time.deltaTime;
 		}
 		if (Input.GetKey (KeyCode.D)) {
-			transform.position += Vector3.right * speed * Time.deltaTime;
+			Camera.main.transform.position += Vector3.right * cameraPanSpeed * Time.deltaTime;
 		}
 
 		//zoomCamera with scroll wheel
 		float scroll = Input.GetAxis ("Mouse ScrollWheel");
-		Camera.main.orthographicSize += scroll * zoomSpeed;
+		if (scroll > 0) {
+			if (!(Camera.main.orthographicSize <= 5)) {
+				Camera.main.orthographicSize -= scroll * cameraZoomSpeed;
+			}
+		} else if (scroll < 0) {
+			if (!(Camera.main.orthographicSize >= 10)) {
+				Camera.main.orthographicSize -= scroll * cameraZoomSpeed;
+			}
+		}
 
 		//set boundaries for camera movement
-		transform.position = new Vector3 (
-			Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
-			Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
-			Mathf.Clamp(transform.position.z, MIN_Z, MAX_Z));
+		Camera.main.transform.position = new Vector3 (
+			Mathf.Clamp(Camera.main.transform.position.x, MIN_X, MAX_X),
+			Mathf.Clamp(Camera.main.transform.position.y, MIN_Y, MAX_Y),
+			-10f);
 
 	}
 
