@@ -8,6 +8,7 @@ public class LandscapeController : MonoBehaviour {
 
 	public Sprite dirtSprite;
 	public Sprite rockySprite;
+	public Sprite ancientGlacierSprite;
 
 	public Landscape Landscape { get; protected set; }
 
@@ -39,6 +40,9 @@ public class LandscapeController : MonoBehaviour {
 				}
 				if (tile_data.Type == Tile.TileType.Rocky) {
 					tile_sr.sprite = rockySprite;
+				}
+				if (tile_data.Type == Tile.TileType.Ancient_Glacier) {
+					tile_sr.sprite = ancientGlacierSprite;
 				}
 
 				tile_data.RegisterTileTypeChangedCallback ((tile) => {

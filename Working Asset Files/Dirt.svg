@@ -9,16 +9,16 @@
    xmlns="http://www.w3.org/2000/svg"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 744.09448819 1052.3622047"
+   width="1024"
+   height="1024"
+   viewBox="0 0 1024 1024"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
    sodipodi:docname="Dirt.svg"
-   inkscape:export-filename="C:\Users\jacks\Documents\GitHub\Mars-Game\Mars Game\Assets\Images\Dirt.png"
-   inkscape:export-xdpi="14.33"
-   inkscape:export-ydpi="14.33">
+   inkscape:export-filename="D:\GitHub Repos\Mars-Game\Mars Game\Assets\Images\Dirt.png"
+   inkscape:export-xdpi="11.25"
+   inkscape:export-ydpi="11.25">
   <defs
      id="defs4" />
   <sodipodi:namedview
@@ -30,15 +30,16 @@
      inkscape:pageshadow="2"
      inkscape:zoom="0.35"
      inkscape:cx="-128.7975"
-     inkscape:cy="439.44238"
+     inkscape:cy="325.15667"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1366"
-     inkscape:window-height="715"
-     inkscape:window-x="-8"
+     inkscape:window-width="1920"
+     inkscape:window-height="1017"
+     inkscape:window-x="1912"
      inkscape:window-y="-8"
-     inkscape:window-maximized="1" />
+     inkscape:window-maximized="1"
+     units="px" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -54,13 +55,14 @@
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(0,-28.36216)">
     <rect
        style="opacity:1;fill:#e78649;fill-opacity:1;stroke:none;stroke-width:18.60000038;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
        id="rect4136"
-       width="803.93445"
-       height="803.93445"
-       x="-37.14286"
-       y="120.93364" />
+       width="1024"
+       height="1024"
+       x="0"
+       y="28.36216" />
   </g>
 </svg>

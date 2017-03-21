@@ -43,7 +43,7 @@ public class Landscape {
 				if (Random.Range (0, 2) == 0) {
 					tiles [x, y].Type = Tile.TileType.Dirt;
 				} else {
-					tiles [x, y].Type = Tile.TileType.Rocky;
+					tiles [x, y].Type = Tile.TileType.Ancient_Glacier;
 				}
 			}
 		}
