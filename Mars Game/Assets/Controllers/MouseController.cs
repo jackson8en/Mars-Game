@@ -5,12 +5,7 @@ using UnityEngine;
 public class MouseController : MonoBehaviour {
 
 	public GameObject cursorHover;
-	public float MIN_X;
-	public float MAX_X;
-	public float MIN_Y;
-	public float MAX_Y;
-	public float MIN_Z;
-	public float MAX_Z;
+	public float MIN_X, MAX_X, MIN_Y, MAX_Y, MIN_Z, MAX_Z;
 
 	private float speed = 4.0f;
 	private float zoomSpeed = 2.0f;
@@ -83,6 +78,7 @@ public class MouseController : MonoBehaviour {
 		lastFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		lastFramePosition.z = 0;
 
+		//Take keyboard inputs and move camera accordingly
 		if (Input.GetKey (KeyCode.W)) {
 			transform.position += Vector3.up * speed * Time.deltaTime;
 		}
@@ -96,9 +92,11 @@ public class MouseController : MonoBehaviour {
 			transform.position += Vector3.right * speed * Time.deltaTime;
 		}
 
+		//zoomCamera with scroll wheel
 		float scroll = Input.GetAxis ("Mouse ScrollWheel");
 		Camera.main.orthographicSize += scroll * zoomSpeed;
 
+		//set boundaries for camera movement
 		transform.position = new Vector3 (
 			Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
 			Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
