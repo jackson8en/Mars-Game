@@ -5,6 +5,15 @@ using UnityEngine;
 public class MouseController : MonoBehaviour {
 
 	public GameObject cursorHover;
+	public float MIN_X;
+	public float MAX_X;
+	public float MIN_Y;
+	public float MAX_Y;
+	public float MIN_Z;
+	public float MAX_Z;
+
+	private float speed = 4.0f;
+	private float zoomSpeed = 2.0f;
 
 	Vector3 lastFramePosition;
 	Vector3 dragStartPosition;
@@ -68,11 +77,32 @@ public class MouseController : MonoBehaviour {
 		// 0 - leftMB, 1 - rightMB, 2 - middleMB
 		if (Input.GetMouseButton(2)) {
 			Vector3 difference = lastFramePosition - currentFramePosition;
-			Camera.main.transform.Translate (difference);
+			transform.Translate (difference);
 		}
 
 		lastFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		lastFramePosition.z = 0;
+
+		if (Input.GetKey (KeyCode.W)) {
+			transform.position += Vector3.up * speed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.A)) {
+			transform.position += Vector3.left * speed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.S)) {
+			transform.position += Vector3.down * speed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.D)) {
+			transform.position += Vector3.right * speed * Time.deltaTime;
+		}
+
+		float scroll = Input.GetAxis ("Mouse ScrollWheel");
+		Camera.main.orthographicSize += scroll * zoomSpeed;
+
+		transform.position = new Vector3 (
+			Mathf.Clamp(transform.position.x, MIN_X, MAX_X),
+			Mathf.Clamp(transform.position.y, MIN_Y, MAX_Y),
+			Mathf.Clamp(transform.position.z, MIN_Z, MAX_Z));
 
 	}
 
