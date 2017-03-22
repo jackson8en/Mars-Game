@@ -37,13 +37,22 @@ public class Landscape {
 
 	}
 
-	public void RandomizeTiles(){
+	public void RandomizeTiles( int seed){
+		float taken = Time.time;
+		int heightScale = 10;
+		float detailScale = 25.0f;
+
 		for (int x = 0; x < width; x++) {
 			for (int y = 0; y < height; y++) {
-				if (Random.Range (0, 2) == 0) {
-					tiles [x, y].Type = Tile.TileType.Dirt;
-				} else {
+				int z = (int)(Mathf.PerlinNoise ((x + seed) / detailScale, (y + seed) / detailScale) * heightScale);
+				if (z <= 2) {
 					tiles [x, y].Type = Tile.TileType.Ancient_Glacier;
+				} else if (z <= 3) {
+					tiles [x, y].Type = Tile.TileType.Loose_Dirt;
+				} else if (z <= 4) {
+					tiles [x, y].Type = Tile.TileType.Dirt;
+				} else if (z <= 8) {
+					tiles [x, y].Type = Tile.TileType.Rocky;
 				}
 			}
 		}

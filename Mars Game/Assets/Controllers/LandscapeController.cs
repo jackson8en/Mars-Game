@@ -9,6 +9,9 @@ public class LandscapeController : MonoBehaviour {
 	public Sprite dirtSprite;
 	public Sprite rockySprite;
 	public Sprite ancientGlacierSprite;
+	public Sprite looseSandSprite;
+
+	public int seed = 13835;
 
 	public Landscape Landscape { get; protected set; }
 
@@ -21,7 +24,7 @@ public class LandscapeController : MonoBehaviour {
 
 		//Create a landscape and randomize types
 		Landscape = new Landscape ();
-		Landscape.RandomizeTiles ();
+		Landscape.RandomizeTiles ( seed );
 
 		//Create GameObject for each tile, to show visually
 		for (int x = 0; x < Landscape.Width; x++) {
@@ -43,6 +46,9 @@ public class LandscapeController : MonoBehaviour {
 				}
 				if (tile_data.Type == Tile.TileType.Ancient_Glacier) {
 					tile_sr.sprite = ancientGlacierSprite;
+				}
+				if (tile_data.Type == Tile.TileType.Loose_Dirt) {
+					tile_sr.sprite = looseSandSprite;
 				}
 
 				tile_data.RegisterTileTypeChangedCallback ((tile) => {
