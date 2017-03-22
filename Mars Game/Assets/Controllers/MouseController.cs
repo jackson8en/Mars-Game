@@ -1,8 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor.Events;
+using UnityEngine.EventSystems;
 
 public class MouseController : MonoBehaviour {
+
+	Tile.TileType terraformTile = Tile.TileType.Rocky;
 
 	public GameObject cursorHoverPrefab;
 	public float MIN_X, MAX_X, MIN_Y, MAX_Y;
@@ -28,9 +32,67 @@ public class MouseController : MonoBehaviour {
 		currentFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
 		currentFramePosition.z = 0;
 
-		//UpdateHoveringCursor ();
+		UpdateDragging ();
 
+		//moveCamera with middleMouse and drag
+		// 0 - leftMB, 1 - rightMB, 2 - middleMB
+		if (Input.GetMouseButton(2)) {
+			Vector3 difference = lastFramePosition - currentFramePosition;
+			Camera.main.transform.Translate (difference);
+		}
+
+		lastFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
+		lastFramePosition.z = 0;
+
+		//Take keyboard inputs and move camera accordingly
+		if (Input.GetKey (KeyCode.W)) {
+			Camera.main.transform.position += Vector3.up * cameraPanSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.A)) {
+			Camera.main.transform.position += Vector3.left * cameraPanSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.S)) {
+			Camera.main.transform.position += Vector3.down * cameraPanSpeed * Time.deltaTime;
+		}
+		if (Input.GetKey (KeyCode.D)) {
+			Camera.main.transform.position += Vector3.right * cameraPanSpeed * Time.deltaTime;
+		}
+
+		//zoomCamera with scroll wheel
+		float scroll = Input.GetAxis ("Mouse ScrollWheel");
+		if (scroll > 0) {
+			if (!(Camera.main.orthographicSize < 5)) {
+				Camera.main.orthographicSize -= Camera.main.orthographicSize * scroll;
+			}
+		} else if (scroll < 0) {
+			if (!(Camera.main.orthographicSize > 25)) {
+				Camera.main.orthographicSize -= Camera.main.orthographicSize * scroll;
+			}
+		}
+
+		//set boundaries for camera movement
+		Camera.main.transform.position = new Vector3 (
+			Mathf.Clamp(Camera.main.transform.position.x, MIN_X, MAX_X),
+			Mathf.Clamp(Camera.main.transform.position.y, MIN_Y, MAX_Y),
+			-10f);
+
+	}
+
+	public void SetMode_Terraform(){
+		terraformTile = Tile.TileType.Rocky;
+	}
+
+	public void SetMode_Bulldoze(){
+		terraformTile = Tile.TileType.Dirt;
+	}
+
+	void UpdateDragging(){
 		//handle leftMB
+		// If over UI, bail out.
+		if( EventSystem.current.IsPointerOverGameObject()){
+			return;
+		}
+
 		//startDrag
 		if (Input.GetMouseButtonDown(0)) {
 			dragStartPosition = currentFramePosition;
@@ -81,65 +143,10 @@ public class MouseController : MonoBehaviour {
 				for (int y = start_y; y <= end_y; y++) {
 					Tile t = LandscapeController.Instance.Landscape.GetTileAt (x, y);
 					if (t != null) {
-						t.Type = Tile.TileType.Rocky;
+						t.Type = terraformTile;
 					}
 				}
 			}
 		}
-
-		//moveCamera with middleMouse and drag
-		// 0 - leftMB, 1 - rightMB, 2 - middleMB
-		if (Input.GetMouseButton(2)) {
-			Vector3 difference = lastFramePosition - currentFramePosition;
-			Camera.main.transform.Translate (difference);
-		}
-
-		lastFramePosition = Camera.main.ScreenToWorldPoint (Input.mousePosition);
-		lastFramePosition.z = 0;
-
-		//Take keyboard inputs and move camera accordingly
-		if (Input.GetKey (KeyCode.W)) {
-			Camera.main.transform.position += Vector3.up * cameraPanSpeed * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.A)) {
-			Camera.main.transform.position += Vector3.left * cameraPanSpeed * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.S)) {
-			Camera.main.transform.position += Vector3.down * cameraPanSpeed * Time.deltaTime;
-		}
-		if (Input.GetKey (KeyCode.D)) {
-			Camera.main.transform.position += Vector3.right * cameraPanSpeed * Time.deltaTime;
-		}
-
-		//zoomCamera with scroll wheel
-		float scroll = Input.GetAxis ("Mouse ScrollWheel");
-		if (scroll > 0) {
-			if (!(Camera.main.orthographicSize < 5)) {
-				Camera.main.orthographicSize -= Camera.main.orthographicSize * scroll;
-			}
-		} else if (scroll < 0) {
-			if (!(Camera.main.orthographicSize > 25)) {
-				Camera.main.orthographicSize -= Camera.main.orthographicSize * scroll;
-			}
-		}
-
-		//set boundaries for camera movement
-		Camera.main.transform.position = new Vector3 (
-			Mathf.Clamp(Camera.main.transform.position.x, MIN_X, MAX_X),
-			Mathf.Clamp(Camera.main.transform.position.y, MIN_Y, MAX_Y),
-			-10f);
-
 	}
-
-//	void UpdateHoveringCursor(){
-//		//Update cursorHover position
-//		Tile tileUnderMouse = LandscapeController.Instance.GetTileAtWorldCoord (currentFramePosition);
-//		if (tileUnderMouse != null) {
-//			cursorHover.SetActive(true);
-//			Vector3 cursorPosition = new Vector3 (tileUnderMouse.X, tileUnderMouse.Y, 0);
-//			cursorHover.transform.position = cursorPosition;
-//		} else {
-//			cursorHover.SetActive(false);
-//		}
-//	}
 }
